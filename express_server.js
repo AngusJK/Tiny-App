@@ -35,9 +35,11 @@ app.get("/hello", (req, res) => {
 });
 // node express_server.js
 app.post("/urls", (req, res) => {
-  urlDatabase[`${generateRandomString()}`] = req.body.longURL;
+  let newString = generateRandomString();
+  urlDatabase[`${newString}`] = req.body.longURL;
   console.log(urlDatabase);
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  const templateVars = { shortURL: newString, longURL: urlDatabase[`${newString}`] };
+  res.render("urls_show", templateVars);         // Respond with 'Ok' (we will replace this)
 });
 
 app.get("/urls", (req, res) => {
