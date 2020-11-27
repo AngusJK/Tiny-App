@@ -35,11 +35,10 @@ app.get("/hello", (req, res) => {
 });
 // node express_server.js
 app.post("/urls", (req, res) => {
-  let newString = generateRandomString();
-  urlDatabase[`${newString}`] = req.body.longURL;
-  console.log(urlDatabase);
-  const templateVars = { shortURL: newString, longURL: urlDatabase[`${newString}`] };
-  res.render("urls_show", templateVars);         // Respond with 'Ok' (we will replace this)
+  let newShortURL = generateRandomString();
+  urlDatabase[`${newShortURL}`] = req.body.longURL;
+  const templateVars = { shortURL: newShortURL, longURL: urlDatabase[`${newShortURL}`] };
+  res.render("urls_show", templateVars);
 });
 
 app.get("/urls", (req, res) => {
@@ -51,10 +50,14 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
-app.get("/urls/:shortURL", (req, res) => { // request object (i.e. req.params) = { shortURL: "b2xVn2" };
-  // templateVars = { shortURL: "b2nVn2", longURL: "http://www.lighthouselabs.ca" };
+app.get("/urls/:shortURL", (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[`${req.params.shortURL}`] };
   res.render("urls_show", templateVars);
+});
+
+app.get("/u/:shortURL", (req, res) => {
+  const longURL = urlDatabase[`${req.params.shortURL}`];
+  res.redirect(longURL);
 });
 
 app.listen(PORT, () => {
