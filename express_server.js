@@ -19,7 +19,7 @@ function generateRandomString() {
   for ( var i = 0; i < 6; i++ ) {
       result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
   }
-  console.log(result);
+  return result;
 };
 
 app.get("/", (req, res) => {
@@ -33,9 +33,10 @@ app.get("/urls.json", (req, res) => {
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
-
+// node express_server.js
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
+  urlDatabase[`${generateRandomString()}`] = req.body.longURL;
+  console.log(urlDatabase);
   res.send("Ok");         // Respond with 'Ok' (we will replace this)
 });
 
