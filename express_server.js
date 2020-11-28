@@ -1,4 +1,3 @@
-
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
@@ -13,11 +12,11 @@ const urlDatabase = {
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
-function generateRandomString() {
+const generateRandomString = function() {
   const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
-  for ( var i = 0; i < 6; i++ ) {
-      result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+  for (let i = 0; i < 6; i++) {
+    result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
   }
   return result;
 };
@@ -33,7 +32,7 @@ app.get("/urls.json", (req, res) => {
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
-// node express_server.js
+
 app.post("/urls", (req, res) => {
   let newShortURL = generateRandomString();
   urlDatabase[`${newShortURL}`] = req.body.longURL;
