@@ -40,9 +40,13 @@ app.post("/urls", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+//
+// DELETE
+//
 app.post("/urls/:shortURL/delete", (req, res) => {
-  console.log("Over here!");
-  delete urlDatabase[`${req.body}`];
+  console.log("I want to delete this short URL: ", req.params.shortURL);
+  delete urlDatabase[req.params.shortURL];
+  res.redirect("/urls");
 });
 
 app.get("/urls", (req, res) => {
