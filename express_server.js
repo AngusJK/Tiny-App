@@ -74,4 +74,9 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-
+app.post("/login", (req, res) => {
+  // set a cookie named 'username' to value submitted in request body of login form
+  console.log("req.body: ", req.body.username);
+  res.cookie("username", req.body.username);
+  res.redirect("urls");
+})
