@@ -92,4 +92,10 @@ app.post("/login", (req, res) => {
   console.log(req.cookies.username);
   const templateVars = { username: req.cookies.username }
   res.redirect("urls", templateVars);
-})
+});
+
+app.post("/logout", (req, res) => {
+  res.clearCookie("username");
+  const templateVars = { username: req.cookies.username }
+  res.redirect("urls", templateVars);
+});
