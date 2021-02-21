@@ -89,5 +89,7 @@ app.listen(PORT, () => {
 
 app.post("/login", (req, res) => {
   res.cookie("username", req.body.username);
-  res.redirect("urls");
+  console.log(req.cookies.username);
+  const templateVars = { username: req.cookies.username }
+  res.redirect("urls", templateVars);
 })
