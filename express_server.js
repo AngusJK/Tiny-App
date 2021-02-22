@@ -10,6 +10,24 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+let users = {
+  "Rxj4l3": {
+    id: "Rxj4l3",
+    email: "joel@sixers.com",
+    password: "joel21"
+  },
+  "lw2c49": {
+    id: "lw2c49",
+    email: "ben@sixers.com",
+    password: "ben25"
+  },
+  "TpcDq7": {
+    id: "3pcDq7",
+    email: "ja@grizzlies.com",
+    password: "ja12"
+  }
+}
+
 const bodyParser = require("body-parser");
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -107,4 +125,13 @@ app.post("/logout", (req, res) => {
   res.redirect("urls");
 });
 
+app.post("/register", (req, res) => {
+  const newUser = {};
+  newUser.id = generateRandomString();
+  newUser.email = req.body.email;
+  newUser.password = req.body.password;
+  users[`${newUser.id}`] = newUser;
+  res.cookie("user_id", newUser.id);
+  res.redirect("urls");
+});
 
