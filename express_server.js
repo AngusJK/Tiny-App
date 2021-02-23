@@ -11,17 +11,17 @@ const urlDatabase = {
 };
 
 let users = {
-  "Rxj4l3": {
+  "joel@sixers.com": {
     id: "Rxj4l3",
     email: "joel@sixers.com",
     password: "joel21"
   },
-  "lw2c49": {
+  "ben@sixers.com": {
     id: "lw2c49",
     email: "ben@sixers.com",
     password: "ben25"
   },
-  "TpcDq7": {
+  "ja@grizzlies.com": {
     id: "3pcDq7",
     email: "ja@grizzlies.com",
     password: "ja12"
@@ -116,7 +116,7 @@ app.listen(PORT, () => {
 });
 
 app.post("/login", (req, res) => {
-  res.cookie("user_id", req.body.id);
+  res.cookie("user_email", req.body.email);
   res.redirect("urls");
 });
 
@@ -126,23 +126,32 @@ app.post("/logout", (req, res) => {
 });
 
 const validateUser = function(email, password, database) {
-  
-}
+  const currentUser = database[email];
+  if (currentUser) {
+    if (currentUser.password === password) {
+      return { user: currentUser, error: null };
+    } else {
+      return { user: null, error: "password" };
+    }
+  } else {
+    return { user: null, error: "user" };
+  }
+};
 
 app.post("/register", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  validateUser(email, password, users);
-
-  if(req.body.email === "" || req.body.password === "") {
-    // respond with 400 error code
+  const { user, error } = validateUser(email, password, users);
+  if(user) {
+    res.write("This user already exists.")
+    res.end();
+  } else {
+    newId = generateRandomString();
+    newUser = { "id": newId, "email": email, "password": password };
+    res.cookie("user_id", newUser.id);
+    users[newUser.email] = newUser;
+    res.redirect("urls");
+    console.log(users);
   }
-  const newUser = {};
-  newUser.id = generateRandomString();
-  newUser.email = req.body.email;
-  newUser.password = req.body.password;
-  users[`${newUser.id}`] = newUser;
-  res.cookie("user_id", newUser.id);
-  res.redirect("urls");
 });
 
