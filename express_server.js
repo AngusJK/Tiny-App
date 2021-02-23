@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const cookieParser = require("cookie-parser");
+const validateUser = require("./helpers/userFunctions");
 
 app.set("view engine", "ejs");
 
@@ -125,25 +126,17 @@ app.post("/logout", (req, res) => {
   res.redirect("urls");
 });
 
-const validateUser = function(email, password, database) {
-  const currentUser = database[email];
-  if (currentUser) {
-    if (currentUser.password === password) {
-      return { user: currentUser, error: null };
-    } else {
-      return { user: null, error: "password" };
-    }
-  } else {
-    return { user: null, error: "user" };
-  }
-};
-
 app.post("/register", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
+  console.log("Email: " + email, "Password: " + password);
+  if (email === "" || password === "") {
+    res.write("Status 400: Bad request. Fields cannot be empty.");
+    res.end();
+  }
   const { user, error } = validateUser(email, password, users);
   if(user) {
-    res.write("This user already exists.")
+    res.write("Status 400: Bad request. This user already exists.")
     res.end();
   } else {
     newId = generateRandomString();
