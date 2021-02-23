@@ -59,7 +59,7 @@ app.post("/urls", (req, res) => {
   const templateVars = { 
     shortURL: newShortURL, 
     longURL: urlDatabase[`${newShortURL}`], 
-    username: req.cookies["username"] 
+    user: users[req.cookies["user_id"]] 
   };
   res.render("urls_show", templateVars);
 });
@@ -75,21 +75,21 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 app.get("/urls", (req, res) => {
   const templateVars = { 
     urls: urlDatabase, 
-    username: req.cookies["username"] 
+    user: users[req.cookies["user_id"]] 
   };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
   const templateVars = {
-    username: req.cookies["username"]
+    user: users[req.cookies["user_id"]] 
   }
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/register", (req, res) => {
   const templateVars = {
-    username: req.cookies["username"]
+    user: users[req.cookies["user_id"]] 
   }
   res.render("urls_register", templateVars);
 });
@@ -101,7 +101,7 @@ app.post("/urls/:shortURL", (req, res) => {
   const templateVars = { 
     shortURL: req.params.shortURL, 
     longURL: urlDatabase[`${req.params.shortURL}`], 
-    username: req.cookies["username"] 
+    user: users[req.cookies["user_id"]] 
   };
   res.render("urls_show", templateVars);
 });
@@ -116,16 +116,27 @@ app.listen(PORT, () => {
 });
 
 app.post("/login", (req, res) => {
-  res.cookie("username", req.body.username);
+  res.cookie("user_id", req.body.id);
   res.redirect("urls");
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
+  res.clearCookie("user_id");
   res.redirect("urls");
 });
 
+const validateUser = function(email, password, database) {
+  
+}
+
 app.post("/register", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  validateUser(email, password, users);
+
+  if(req.body.email === "" || req.body.password === "") {
+    // respond with 400 error code
+  }
   const newUser = {};
   newUser.id = generateRandomString();
   newUser.email = req.body.email;
