@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const cookieParser = require("cookie-parser");
-const validateUser = require("./helpers/userFunctions");
+const { validateUser, findUser } = require("./helpers/userFunctions");
 
 app.set("view engine", "ejs");
 
@@ -12,18 +12,18 @@ const urlDatabase = {
 };
 
 let users = {
-  "joel@sixers.com": {
+  "Rxj4l3": {
     id: "Rxj4l3",
     email: "joel@sixers.com",
     password: "joel21"
   },
-  "ben@sixers.com": {
+  "lw2c49": {
     id: "lw2c49",
     email: "ben@sixers.com",
     password: "ben25"
   },
-  "ja@grizzlies.com": {
-    id: "3pcDq7",
+  "PpcDq7": {
+    id: "PpcDq7",
     email: "ja@grizzlies.com",
     password: "ja12"
   }
@@ -76,7 +76,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 app.get("/urls", (req, res) => {
   const templateVars = { 
     urls: urlDatabase, 
-    user: users[req.cookies["user_id"]] 
+    user: users[req.cookies["user_id"]]
   };
   res.render("urls_index", templateVars);
 });
@@ -116,9 +116,24 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
+app.get("/urls/login", (req, res) => {
+  const templateVars = {
+    user: users[req.cookies["user_id"]] 
+  }
+  res.render("urls_login", templateVars);
+});
+
 app.post("/login", (req, res) => {
-  res.cookie("user_email", req.body.email);
-  res.redirect("urls");
+  const id = req.body.id;
+  const password = req.body.password;
+  const { user, error } = validateUser(id, password, users);
+  if(user) {
+    res.cookie("user_id", user.id);
+    res.redirect("urls");
+  } else {
+    res.send(`There was an error of type ${error}.`);
+    //res.end();
+  }
 });
 
 app.post("/logout", (req, res) => {
@@ -129,22 +144,21 @@ app.post("/logout", (req, res) => {
 app.post("/register", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  console.log("Email: " + email, "Password: " + password);
   if (email === "" || password === "") {
     res.write("Status 400: Bad request. Fields cannot be empty.");
     res.end();
   }
-  const { user, error } = validateUser(email, password, users);
-  if(user) {
+  const userExists = findUser(email, users);
+  console.log(userExists);
+  if(userExists) {
     res.write("Status 400: Bad request. This user already exists.")
     res.end();
   } else {
-    newId = generateRandomString();
-    newUser = { "id": newId, "email": email, "password": password };
+    const newId = generateRandomString();
+    const newUser = { "id": newId, "email": email, "password": password };
+    users[newUser.id] = newUser;
     res.cookie("user_id", newUser.id);
-    users[newUser.email] = newUser;
     res.redirect("urls");
-    console.log(users);
   }
 });
 
