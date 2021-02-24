@@ -14,17 +14,20 @@ const urlDatabase = {
 let users = {
   "Rxj4l3": {
     id: "Rxj4l3",
-    email: "joel@sixers.com",
+    username: "Joel",
+    email: "embiid@sixers.com",
     password: "joel21"
   },
   "lw2c49": {
     id: "lw2c49",
-    email: "ben@sixers.com",
+    username: "Ben",
+    email: "simmons@sixers.com",
     password: "ben25"
   },
   "PpcDq7": {
     id: "PpcDq7",
-    email: "ja@grizzlies.com",
+    username: "Ja",
+    email: "morant@grizzlies.com",
     password: "ja12"
   }
 }
@@ -124,9 +127,9 @@ app.get("/urls/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  const id = req.body.id;
+  const email = req.body.email;
   const password = req.body.password;
-  const { user, error } = validateUser(id, password, users);
+  const { user, error } = validateUser(email, password, users);
   if(user) {
     res.cookie("user_id", user.id);
     res.redirect("urls");
