@@ -151,7 +151,7 @@ app.post("/register", (req, res) => {
   const userExists = findUser(email, users);
   console.log(userExists);
   if(userExists) {
-    res.write("Status 400: Bad request. This user already exists.")
+    res.send("Status 400: Bad request. This user already exists.")
     res.end();
   } else {
     const newId = generateRandomString();
