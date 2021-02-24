@@ -1,14 +1,18 @@
-const validateUser = function(id, password, database) {
-  const currentUser = database[id];
-  if (currentUser) {
-    if (currentUser.password === password) {
-      return { user: currentUser, error: null };
-    } else {
-      return { user: null, error: "password" };
-    }
-  } else {
-    return { user: null, error: "id" };
+const validateUser = function(email, password, database) {
+  let response = { user: null, error: "email" }
+
+  for (let user in database) {
+    console.log(user);
+    if (database[user].email === email) {
+      if (database[user].password === password) {
+        response.user = database[user];
+        response.error = null;
+      } else {
+        response.error = "password";
+      }
+    } 
   }
+  return response 
 };
 
 const findUser = function(email, database) {
@@ -19,6 +23,6 @@ const findUser = function(email, database) {
     } 
   }
   return response
-}
+};
 
 module.exports = { validateUser, findUser };
