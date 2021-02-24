@@ -11,7 +11,7 @@
         
         <% if (user) { %>
         
-        <span>Signed in as: <%= user.id %> </span>
+        <span>Signed in as: <%= user.username %> </span>
         
         <form method="POST" action="/logout">
           <input type="submit" value="Sign Out" >
