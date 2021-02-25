@@ -2,13 +2,13 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const cookieParser = require("cookie-parser");
-const validateUser = require("./helpers/userFunctions");
+const { validateUser, urlsForUser } = require("./helpers/userFunctions");
 
 app.set("view engine", "ejs");
 
 const urlDatabase = {
   "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "Rxj4l3" },
-  "9sm5xK": { longURL: "http://www.google.com", userID: "Rxj4l3" },
+  "sgq3y6": { longURL: "http://www.google.com", userID: "Rxj4l3" },
   "d9Kled": { longURL: "http://www.github.com", userID: "lw2c49"},
   "MRj39d": { longURL: "http://www.youtube.com", userID: "lw2c49"},
   "8MbEj2": { longURL: "http://www.wikipedia.org", userID: "PpcDq7"},
@@ -75,10 +75,12 @@ app.get("/home", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
+  const userSpecificUrls = urlsForUser(req.cookies["user_id"], urlDatabase);
   const templateVars = { 
-    urls: urlDatabase, 
+    urls: userSpecificUrls, 
     user: users[req.cookies["user_id"]]
   };
+  console.log(userSpecificUrls);
   res.render("urls_index", templateVars);
 });
 
@@ -121,13 +123,7 @@ app.get("/urls/login", (req, res) => {
 app.post("/urls", (req, res) => {
   let newShortURL = generateRandomString();
   urlDatabase[`${newShortURL}`] = { longURL: req.body.longURL, userID: req.cookies["user_id"] };
-  const templateVars = { 
-    //shortURL: newShortURL, 
-    //longURL: urlDatabase[`${newShortURL}`], 
-    user: users[req.cookies["user_id"]],
-    urls: urlDatabase 
-  };
-  res.render("urls_index", templateVars);
+  res.redirect("/urls");
 });
 
 app.post("/urls/:shortURL", (req, res) => {
