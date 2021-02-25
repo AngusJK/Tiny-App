@@ -10,11 +10,12 @@
   <body>
     <%- include('partials/_header') %>
     <main>
-      <h3 style="margin: 10px">Register Here</h3>
+      <h3 style="margin: 10px">Create an account</h3>
       <form method="POST" action="/register">
-        <input style="margin: 10px" type="email" name="email" placeholder="enter your email"><br>
-        <input style="margin: 10px" type="password" name="password" placeholder="create a password"><br>
-        <button style="margin: 10px" type="submit">Register me!</button>
+        <input style="margin: 10px; width: 300px;" type="text" name="username" placeholder="create a username"><br>
+        <input style="margin: 10px; width: 300px;" type="email" name="email" placeholder="enter your email"><br>
+        <input style="margin: 10px; width: 300px;" type="password" name="password" placeholder="create a password"><br>
+        <button style="margin: 10px" type="submit">Sign me up!</button>
       </form>
     </main>
     <!-- Bootstrap JS -->
