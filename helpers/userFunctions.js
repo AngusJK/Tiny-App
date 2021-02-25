@@ -14,4 +14,16 @@ const validateUser = function(email, password, database) {
   return response 
 };
 
-module.exports = validateUser;
+const urlsForUser = function(id, database) {
+  console.log(id);
+  console.log(database);
+  const myUrls = {};
+  for (let url in database) {
+   if(database[url].userID === id) {
+    myUrls[url] = database[url];
+   }
+  }
+  return myUrls;
+};
+
+module.exports = { validateUser, urlsForUser };
