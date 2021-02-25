@@ -80,7 +80,6 @@ app.get("/urls", (req, res) => {
     urls: userSpecificUrls, 
     user: users[req.cookies["user_id"]]
   };
-  console.log(userSpecificUrls);
   res.render("urls_index", templateVars);
 });
 
@@ -140,10 +139,10 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect("/urls");
 });
 
-app.post("/edit", (req, res) => {
-  //const revisedLongURL = req.body.revisedLongURL;
-
-  res.send(req.body);
+app.post("/urls/:shortURL/edit", (req, res) => {
+  const shortURL = req.params.shortURL;
+  urlDatabase[shortURL].longURL = req.body.revisedLongURL;
+  res.redirect("/urls")
 });
 
 app.post("/register", (req, res) => {
