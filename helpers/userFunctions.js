@@ -1,6 +1,5 @@
 const validateUser = function(email, password, database) {
   let response = { user: null, error: "email" }
-
   for (let user in database) {
     console.log(user);
     if (database[user].email === email) {
@@ -15,14 +14,4 @@ const validateUser = function(email, password, database) {
   return response 
 };
 
-const findUser = function(email, database) {
-  let response = false
-  for (let user in database) {
-    if (database[user].email === email) {
-      response = true
-    } 
-  }
-  return response
-};
-
-module.exports = { validateUser, findUser };
+module.exports = validateUser;
