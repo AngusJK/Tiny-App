@@ -17,9 +17,9 @@
   </div>
   <div class="card text-center">
     <h5>EDIT</h5>
-    <form method="POST" action="/edit">
+    <form method="POST" action="/urls/<%= shortURL %>/edit">
       URL: <input type="text" name="revisedLongURL" value="<%= longURL %> " style="width: 300px">
-      <input type="submit" value="Submit">
+      <input type="submit" value="Submit Changes" class="btn btn-primary">
     </form>
   </div>
   <!-- Bootstrap JS -->
