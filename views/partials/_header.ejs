@@ -1,26 +1,25 @@
 <header>
   <nav class="navbar navbar-expand-md navbar-dark bg-success">
-    <a class="navbar-brand" href="/urls">TinyApp</a>
+    <a class="navbar-brand" href="/home">TinyApp</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-item nav-link" href="/urls">My URLs</a>
-        <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-        
+       <a class="nav-item nav-link" href="/urls/shorturls">URLs</a>
         <% if (user) { %>
         
-        <span>Signed in as: <%= user.username %> </span>
-        
+        <a class="nav-item nav-link" href="/urls">My URLs</a>
+        <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+        <span>Hello, <%= user.username %>! </span>
         <form method="POST" action="/logout">
           <input type="submit" value="Sign Out" >
         </form>
 
         <% } else { %>
 
+        <a class="nav-item nav-link" href="/urls/login">Sign in</a>
         <a class="nav-item nav-link" href="/urls/register">Register</a>  
-        <a class="nav-item nav-link" href="/urls/login">Login</a>
 
         <% } %>
 
