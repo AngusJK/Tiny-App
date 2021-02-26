@@ -112,7 +112,8 @@ app.get("/urls/shorturls", (req, res) => {
 
 app.get("/urls/login", (req, res) => {
   const templateVars = {
-    user: users[req.cookies["user_id"]] 
+    error: null,
+    user: users[req.cookies["user_id"]]
   }
   res.render("urls_login", templateVars);
 });
@@ -170,11 +171,21 @@ app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const { user, error } = validateUser(email, password, users);
+  let errorMessage = "";
   if(user) {
     res.cookie("user_id", user.id);
     res.redirect("urls");
-  } else {
-    res.send(`There was an error of type ${error}.`);
+  } else { 
+    if(error === "email") {
+      errorMessage = "* email not found";
+    } else if(error === "password") {
+      errorMessage = "* password incorrect";
+    }
+    const templateVars = {
+      user: users[req.cookies["user_id"]], 
+      error: errorMessage
+    }
+    res.render("urls_login", templateVars);
   };
 });
 
