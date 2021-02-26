@@ -1,8 +1,10 @@
+const bcrypt = require("bcrypt");
+
 const validateUser = function(email, password, database) {
   let response = { user: null, error: "email" }
   for (let user in database) {
     if (database[user].email === email) {
-      if (database[user].password === password) {
+      if (bcrypt.compareSync(password, database[user].password)) {
         response.user = database[user];
         response.error = null;
       } else {
