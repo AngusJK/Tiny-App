@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const cookieParser = require("cookie-parser");
+const bcrypt = require("bcrypt");
 const { validateUser, urlsForUser } = require("./helpers/userFunctions");
 
 app.set("view engine", "ejs");
@@ -72,6 +73,7 @@ app.get("/home", (req, res) => {
     user: users[req.cookies["user_id"]]
   }
   res.render("urls_home", templateVars);
+  console.log(users);
 });
 
 app.get("/urls", (req, res) => {
@@ -150,6 +152,7 @@ app.post("/urls/:shortURL/edit", (req, res) => {
 app.post("/register", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
+  const hashedPassword = bcrypt.hashSync(password, 10);
   const username = req.body.username;
   if (username === "" || email === "" || password === "") {
     const errorMessage = "* fields cannot be left blank"
@@ -159,7 +162,7 @@ app.post("/register", (req, res) => {
     }
     res.render("urls_register", templateVars);
   }
-  const { user, error } = validateUser(email, password, users);
+  const { user, error } = validateUser(email, hashedPassword, users);
   if(user || error === "password") {
     const errorMessage = "* user already exists"
     const templateVars = {
@@ -169,7 +172,7 @@ app.post("/register", (req, res) => {
     res.render("urls_register", templateVars);
   } else {
     const newId = generateRandomString();
-    const newUser = { "id": newId, "username": username, "email": email, "password": password };
+    const newUser = { "id": newId, "username": username, "email": email, "password": hashedPassword };
     users[newUser.id] = newUser;
     res.cookie("user_id", newUser.id);
     res.redirect("urls");
