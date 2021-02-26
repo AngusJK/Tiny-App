@@ -11,9 +11,9 @@
         
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-        <span>Hello, <%= user.username %>! </span>
+        <span style="margin: 8px; color: black">Hello, <%= user.username %>! </span>
         <form method="POST" action="/logout">
-          <input type="submit" value="Sign Out" >
+          <input type="submit" value="Sign Out" class="btn btn-warning" style="color: black;">
         </form>
 
         <% } else { %>
