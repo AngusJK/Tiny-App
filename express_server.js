@@ -92,7 +92,8 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls/register", (req, res) => {
   const templateVars = {
-    user: users[req.cookies["user_id"]] 
+    user: users[req.cookies["user_id"]],
+    error: null
   }
   res.render("urls_register", templateVars);
 });
@@ -150,14 +151,22 @@ app.post("/register", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const username = req.body.username;
-  if (email === "" || password === "") {
-    res.write("Status 400: Bad request. All fields must be filled in.");
-    res.end();
+  if (username === "" || email === "" || password === "") {
+    const errorMessage = "* fields cannot be left blank"
+    const templateVars = {
+      user: users[req.cookies["user_id"]], 
+      error: errorMessage
+    }
+    res.render("urls_register", templateVars);
   }
   const { user, error } = validateUser(email, password, users);
   if(user || error === "password") {
-    res.send("Status 400: Bad request. This user already exists.")
-    res.end();
+    const errorMessage = "* user already exists"
+    const templateVars = {
+      user: users[req.cookies["user_id"]], 
+      error: errorMessage
+    }
+    res.render("urls_register", templateVars);
   } else {
     const newId = generateRandomString();
     const newUser = { "id": newId, "username": username, "email": email, "password": password };
