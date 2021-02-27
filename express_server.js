@@ -1,8 +1,9 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
-const cookieParser = require("cookie-parser");
+//const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
+const cookieSession = require("cookie-session");
 const { validateUser, urlsForUser } = require("./helpers/userFunctions");
 
 app.set("view engine", "ejs");
@@ -17,28 +18,32 @@ const urlDatabase = {
 };
 
 let users = {
-  "Rxj4l3": {
-    id: "Rxj4l3",
-    username: "Joel",
-    email: "embiid@sixers.com",
-    password: "joel21"
+  "d9rjdl": {
+    id: "d9rjdl",
+    username: "Albert",
+    email: "albert@einstein.com",
+    password: "$2b$10$NdqA2jc.XBuxVtZzP2crcev4I4JeSZ7UUjPqlYBkm.4d131WN7iaW"
   },
-  "lw2c49": {
-    id: "lw2c49",
-    username: "Ben",
-    email: "simmons@sixers.com",
-    password: "ben25"
+  "Apkda2": {
+    id: "Apkda2",
+    username: "Marie",
+    email: "marie@curie.com",
+    password: "$2b$10$UxHU8ShE8.rC3JHehXTcte9uR0JyiumLSbA2ExeMvjRYwt986w5lG"
   },
-  "PpcDq7": {
-    id: "PpcDq7",
-    username: "Ja",
-    email: "morant@grizzlies.com",
-    password: "ja12"
+  "Tlqsaa": {
+    id: "Tlqsaa",
+    username: "Enrico",
+    email: "enrico@fermi.com",
+    password: "$2b$10$tIrseJky.Wgp5dj39/lEdOifoujOJe19mPqeBCX1nNU/eVpOlmocW"
   }
-}
+};
 
 const bodyParser = require("body-parser");
-app.use(cookieParser());
+//app.use(cookieParser());
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}));
 app.use(bodyParser.urlencoded({extended: true}));
 
 const generateRandomString = function() {
@@ -70,31 +75,30 @@ app.get("/hello", (req, res) => {
 
 app.get("/home", (req, res) => {
   const templateVars = {
-    user: users[req.cookies["user_id"]]
+    user: users[req.session["user_id"]]
   }
   res.render("urls_home", templateVars);
-  console.log(users);
 });
 
 app.get("/urls", (req, res) => {
-  const userSpecificUrls = urlsForUser(req.cookies["user_id"], urlDatabase);
+  const userSpecificUrls = urlsForUser(req.session["user_id"], urlDatabase);
   const templateVars = { 
     urls: userSpecificUrls, 
-    user: users[req.cookies["user_id"]]
+    user: users[req.session["user_id"]]
   };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
   const templateVars = {
-    user: users[req.cookies["user_id"]] 
+    user: users[req.session["user_id"]] 
   }
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/register", (req, res) => {
   const templateVars = {
-    user: users[req.cookies["user_id"]],
+    user: users[req.session["user_id"]],
     error: null
   }
   res.render("urls_register", templateVars);
@@ -108,7 +112,7 @@ app.get("/u/:shortURL", (req, res) => {
 app.get("/urls/shorturls", (req, res) => {
   const templateVars = {
     urls: urlDatabase,
-    user: users[req.cookies["user_id"]] 
+    user: users[req.session["user_id"]] 
   }
   res.render("urls_shorturls", templateVars);
 });
@@ -116,7 +120,7 @@ app.get("/urls/shorturls", (req, res) => {
 app.get("/urls/login", (req, res) => {
   const templateVars = {
     error: null,
-    user: users[req.cookies["user_id"]]
+    user: users[req.session["user_id"]]
   }
   res.render("urls_login", templateVars);
 });
@@ -125,7 +129,7 @@ app.get("/urls/login", (req, res) => {
 //
 app.post("/urls", (req, res) => {
   let newShortURL = generateRandomString();
-  urlDatabase[`${newShortURL}`] = { longURL: req.body.longURL, userID: req.cookies["user_id"] };
+  urlDatabase[`${newShortURL}`] = { longURL: req.body.longURL, userID: req.session["user_id"] };
   res.redirect("/urls");
 });
 
@@ -133,7 +137,7 @@ app.post("/urls/:shortURL", (req, res) => {
   const templateVars = { 
     shortURL: req.params.shortURL, 
     longURL: urlDatabase[`${req.params.shortURL}`].longURL, 
-    user: users[req.cookies["user_id"]] 
+    user: users[req.session["user_id"]] 
   };
   res.render("urls_show", templateVars);
 });
@@ -157,7 +161,7 @@ app.post("/register", (req, res) => {
   if (username === "" || email === "" || password === "") {
     const errorMessage = "* fields cannot be left blank"
     const templateVars = {
-      user: users[req.cookies["user_id"]], 
+      user: users[req.session["user_id"]], 
       error: errorMessage
     }
     res.render("urls_register", templateVars);
@@ -166,7 +170,7 @@ app.post("/register", (req, res) => {
   if(user || error === "password") {
     const errorMessage = "* user already exists"
     const templateVars = {
-      user: users[req.cookies["user_id"]], 
+      user: users[req.session["user_id"]], 
       error: errorMessage
     }
     res.render("urls_register", templateVars);
@@ -174,7 +178,7 @@ app.post("/register", (req, res) => {
     const newId = generateRandomString();
     const newUser = { "id": newId, "username": username, "email": email, "password": hashedPassword };
     users[newUser.id] = newUser;
-    res.cookie("user_id", newUser.id);
+    req.session["user_id"] = newId;
     res.redirect("urls");
   }
 });
@@ -185,16 +189,18 @@ app.post("/login", (req, res) => {
   const { user, error } = validateUser(email, password, users);
   let errorMessage = "";
   if(user) {
-    res.cookie("user_id", user.id);
+    req.session["user_id"] = user.id;
     res.redirect("urls");
   } else { 
     if(error === "email") {
+      console.log("error: email");
       errorMessage = "* email not found";
     } else if(error === "password") {
+      console.log("error: password");
       errorMessage = "* password incorrect";
     }
     const templateVars = {
-      user: users[req.cookies["user_id"]], 
+      user: users[req.session["user_id"]], 
       error: errorMessage
     }
     res.render("urls_login", templateVars);
@@ -202,7 +208,7 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("user_id");
+  req.session = null;
   res.redirect("/urls/login");
 });
 
