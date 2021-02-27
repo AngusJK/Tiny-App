@@ -12,6 +12,7 @@ const validateUser = function(email, password, database) {
       }
     } 
   }
+  console.log(response);
   return response 
 };
 
