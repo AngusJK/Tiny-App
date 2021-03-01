@@ -12,8 +12,15 @@ const validateUser = function(email, password, database) {
       }
     } 
   }
-  console.log(response);
   return response 
+};
+
+const getUserByEmail = function(email, database) {
+  for (let user in database) {
+    if (database[user].email === email) {
+      return database[user];
+    } 
+  };
 };
 
 const urlsForUser = function(id, database) {
@@ -26,4 +33,4 @@ const urlsForUser = function(id, database) {
   return myUrls;
 };
 
-module.exports = { validateUser, urlsForUser };
+module.exports = { validateUser, urlsForUser, getUserByEmail };
