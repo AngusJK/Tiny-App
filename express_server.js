@@ -4,7 +4,7 @@ const PORT = 8080; // default port 8080
 //const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 const cookieSession = require("cookie-session");
-const { validateUser, urlsForUser } = require("./helpers/userFunctions");
+const { validateUser, urlsForUser, getUserByEmail } = require("./helpers/userFunctions");
 
 app.set("view engine", "ejs");
 
