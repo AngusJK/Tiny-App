@@ -1,5 +1,14 @@
 const bcrypt = require("bcrypt");
 
+const generateRandomString = function() {
+  const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < 6; i++) {
+    result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+  }
+  return result;
+};
+
 const validateUser = function(email, password, database) {
   let response = { user: null, error: "email" }
   for (let user in database) {
@@ -15,14 +24,6 @@ const validateUser = function(email, password, database) {
   return response 
 };
 
-const getUserByEmail = function(email, database) {
-  for (let user in database) {
-    if (database[user].email === email) {
-      return database[user];
-    } 
-  };
-};
-
 const urlsForUser = function(id, database) {
   const myUrls = {};
   for (let url in database) {
@@ -33,4 +34,4 @@ const urlsForUser = function(id, database) {
   return myUrls;
 };
 
-module.exports = { validateUser, urlsForUser, getUserByEmail };
+module.exports = { validateUser, urlsForUser, generateRandomString };
