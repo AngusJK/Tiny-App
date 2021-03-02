@@ -1,6 +1,6 @@
 const { assert } = require('chai');
 
-const { getUserByEmail, validateUser } = require('../helpers/userFunctions.js');
+const { validateUser } = require('../helpers/userFunctions.js');
 
 const testUsers = {
   "userRandomID": {
@@ -14,18 +14,6 @@ const testUsers = {
     password: "dishwasher-funk"
   }
 };
-
-describe('getUserByEmail', function() {
-  it('should return a user with valid email and password', function() {
-    const user = getUserByEmail("user@example.com", testUsers)
-    const expectedOutput = "userRandomID";
-    assert.strictEqual(user.id, expectedOutput);
-  });
-  it('should return <undefined> if an email is not in the database', function() {
-    const expectedOutput = undefined;
-    assert.strictEqual(getUserByEmail("myfavouriteband@wutangclan.com", testUsers), expectedOutput);
-  });
-});
 
 describe('validateUser', function() {
   it('should return email error if email not present in database', function() {
