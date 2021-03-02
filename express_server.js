@@ -1,10 +1,10 @@
 const express = require("express");
 const app = express();
-const PORT = 8080; // default port 8080
-//const cookieParser = require("cookie-parser");
+const PORT = 8080;
 const bcrypt = require("bcrypt");
 const cookieSession = require("cookie-session");
-const { validateUser, urlsForUser, getUserByEmail } = require("./helpers/userFunctions");
+const bodyParser = require("body-parser");
+const { validateUser, urlsForUser, generateRandomString } = require("./helpers/userFunctions");
 
 app.set("view engine", "ejs");
 
@@ -38,29 +38,16 @@ let users = {
   }
 };
 
-const bodyParser = require("body-parser");
-//app.use(cookieParser());
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2']
 }));
 app.use(bodyParser.urlencoded({extended: true}));
 
-const generateRandomString = function() {
-  const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  for (let i = 0; i < 6; i++) {
-    result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
-  }
-  return result;
-};
-
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
-//
-// GET requests
-//
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -73,6 +60,7 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
+// home page
 app.get("/home", (req, res) => {
   const templateVars = {
     user: users[req.session["user_id"]]
@@ -80,6 +68,7 @@ app.get("/home", (req, res) => {
   res.render("urls_home", templateVars);
 });
 
+// diplays URLs for logged in user
 app.get("/urls", (req, res) => {
   const userSpecificUrls = urlsForUser(req.session["user_id"], urlDatabase);
   const templateVars = { 
@@ -89,6 +78,7 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+// create a new URL
 app.get("/urls/new", (req, res) => {
   const templateVars = {
     user: users[req.session["user_id"]] 
@@ -96,6 +86,7 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new", templateVars);
 });
 
+// user registration page
 app.get("/urls/register", (req, res) => {
   const templateVars = {
     user: users[req.session["user_id"]],
@@ -117,6 +108,7 @@ app.get("/urls/shorturls", (req, res) => {
   res.render("urls_shorturls", templateVars);
 });
 
+// user login page
 app.get("/urls/login", (req, res) => {
   const templateVars = {
     error: null,
@@ -124,15 +116,14 @@ app.get("/urls/login", (req, res) => {
   }
   res.render("urls_login", templateVars);
 });
-//
-// POST requests
-//
+
 app.post("/urls", (req, res) => {
   let newShortURL = generateRandomString();
   urlDatabase[`${newShortURL}`] = { longURL: req.body.longURL, userID: req.session["user_id"] };
   res.redirect("/urls");
 });
 
+// edit a URL
 app.post("/urls/:shortURL", (req, res) => {
   const templateVars = { 
     shortURL: req.params.shortURL, 
@@ -142,6 +133,7 @@ app.post("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+// delete a URL
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
@@ -153,6 +145,7 @@ app.post("/urls/:shortURL/edit", (req, res) => {
   res.redirect("/urls")
 });
 
+// user registration verification
 app.post("/register", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -183,6 +176,7 @@ app.post("/register", (req, res) => {
   }
 });
 
+// user login verification
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -207,6 +201,7 @@ app.post("/login", (req, res) => {
   };
 });
 
+// logout user
 app.post("/logout", (req, res) => {
   req.session = null;
   res.redirect("/urls/login");
