@@ -42,7 +42,8 @@ app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2']
 }))
-// app.use(bodyParser.urlencoded({extended: true}))
+
+app.use(express.urlencoded())
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`)
