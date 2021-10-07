@@ -1,37 +1,37 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt')
 
-const generateRandomString = function() {
-  const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
+const generateRandomString = function () {
+  const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let result = ''
   for (let i = 0; i < 6; i++) {
-    result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+    result += randomChars.charAt(Math.floor(Math.random() * randomChars.length))
   }
-  return result;
-};
+  return result
+}
 
-const validateUser = function(email, password, database) {
-  let response = { user: null, error: "email" }
-  for (let user in database) {
+const validateUser = function (email, password, database) {
+  const response = { user: null, error: 'email' }
+  for (const user in database) {
     if (database[user].email === email) {
       if (bcrypt.compareSync(password, database[user].password)) {
-        response.user = database[user];
-        response.error = null;
+        response.user = database[user]
+        response.error = null
       } else {
-        response.error = "password";
+        response.error = 'password'
       }
-    } 
+    }
   }
-  return response 
-};
+  return response
+}
 
-const urlsForUser = function(id, database) {
-  const myUrls = {};
-  for (let url in database) {
-   if(database[url].userID === id) {
-    myUrls[url] = database[url];
-   }
+const urlsForUser = function (id, database) {
+  const myUrls = {}
+  for (const url in database) {
+    if (database[url].userID === id) {
+      myUrls[url] = database[url]
+    }
   }
-  return myUrls;
-};
+  return myUrls
+}
 
-module.exports = { validateUser, urlsForUser, generateRandomString };
+module.exports = { validateUser, urlsForUser, generateRandomString }
