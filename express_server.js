@@ -3,7 +3,7 @@ const app = express()
 const PORT = 8080
 const bcrypt = require('bcrypt')
 const cookieSession = require('cookie-session')
-const bodyParser = require('body-parser')
+// const bodyParser = require('body-parser')
 const { validateUser, urlsForUser, generateRandomString } = require('./helpers/userFunctions')
 
 app.set('view engine', 'ejs')
@@ -42,7 +42,7 @@ app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2']
 }))
-app.use(bodyParser.urlencoded({extended: true}))
+// app.use(bodyParser.urlencoded({extended: true}))
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`)
@@ -83,7 +83,7 @@ app.get('/urls/new', (req, res) => {
   const templateVars = {
     user: users[req.session["user_id"]]
   }
-  res.render("urls_new", templateVars)
+  res.render('urls_new', templateVars)
 })
 
 // user registration page
@@ -109,102 +109,100 @@ app.get('/urls/shorturls', (req, res) => {
 })
 
 // user login page
-app.get("/urls/login", (req, res) => {
+app.get('/urls/login', (req, res) => {
   const templateVars = {
     error: null,
     user: users[req.session["user_id"]]
   }
-  res.render("urls_login", templateVars);
-});
+  res.render('urls_login', templateVars)
+})
 
-app.post("/urls", (req, res) => {
-  let newShortURL = generateRandomString();
-  urlDatabase[`${newShortURL}`] = { longURL: req.body.longURL, userID: req.session["user_id"] };
-  res.redirect("/urls");
-});
+app.post('/urls', (req, res) => {
+  const newShortURL = generateRandomString()
+  urlDatabase[`${newShortURL}`] = { longURL: req.body.longURL, userID: req.session["user_id"] }
+  res.redirect('/urls')
+})
 
 // edit a URL
-app.post("/urls/:shortURL", (req, res) => {
-  const templateVars = { 
-    shortURL: req.params.shortURL, 
-    longURL: urlDatabase[`${req.params.shortURL}`].longURL, 
-    user: users[req.session["user_id"]] 
-  };
-  res.render("urls_show", templateVars);
-});
+app.post('/urls/:shortURL', (req, res) => {
+  const templateVars = {
+    shortURL: req.params.shortURL,
+    longURL: urlDatabase[`${req.params.shortURL}`].longURL,
+    user: users[req.session["user_id"]]
+  }
+  res.render('urls_show', templateVars)
+})
 
 // delete a URL
-app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect("/urls");
-});
+app.post('/urls/:shortURL/delete', (req, res) => {
+  delete urlDatabase[req.params.shortURL]
+  res.redirect('/urls')
+})
 
-app.post("/urls/:shortURL/edit", (req, res) => {
-  const shortURL = req.params.shortURL;
-  urlDatabase[shortURL].longURL = req.body.revisedLongURL;
-  res.redirect("/urls")
-});
+app.post('/urls/:shortURL/edit', (req, res) => {
+  const shortURL = req.params.shortURL
+  urlDatabase[shortURL].longURL = req.body.revisedLongURL
+  res.redirect('/urls')
+})
 
 // user registration verification
-app.post("/register", (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const hashedPassword = bcrypt.hashSync(password, 10);
-  const username = req.body.username;
-  if (username === "" || email === "" || password === "") {
-    const errorMessage = "* fields cannot be left blank"
+app.post('/register', (req, res) => {
+  const email = req.body.email
+  const password = req.body.password
+  const hashedPassword = bcrypt.hashSync(password, 10)
+  const username = req.body.username
+  if (username === '' || email === '' || password === '') {
+    const errorMessage = '* fields cannot be left blank'
     const templateVars = {
-      user: users[req.session["user_id"]], 
+      user: users[req.session["user_id"]],
       error: errorMessage
     }
-    res.render("urls_register", templateVars);
+    res.render('urls_register', templateVars)
   }
-  const { user, error } = validateUser(email, hashedPassword, users);
-  if(user || error === "password") {
-    const errorMessage = "* user already exists"
+  const { user, error } = validateUser(email, hashedPassword, users)
+  if (user || error === 'password') {
+    const errorMessage = '* user already exists'
     const templateVars = {
-      user: users[req.session["user_id"]], 
+      user: users[req.session["user_id"]],
       error: errorMessage
     }
-    res.render("urls_register", templateVars);
+    res.render('urls_register', templateVars)
   } else {
-    const newId = generateRandomString();
-    const newUser = { "id": newId, "username": username, "email": email, "password": hashedPassword };
-    users[newUser.id] = newUser;
-    req.session["user_id"] = newId;
-    res.redirect("urls");
+    const newId = generateRandomString()
+    const newUser = { "id": newId, "username": username, "email": email, "password": hashedPassword }
+    users[newUser.id] = newUser
+    req.session["user_id"] = newId
+    res.redirect('urls')
   }
-});
+})
 
 // user login verification
-app.post("/login", (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const { user, error } = validateUser(email, password, users);
-  let errorMessage = "";
-  if(user) {
-    req.session["user_id"] = user.id;
-    res.redirect("urls");
-  } else { 
-    if(error === "email") {
-      console.log("error: email");
-      errorMessage = "* email not found";
-    } else if(error === "password") {
-      console.log("error: password");
-      errorMessage = "* password incorrect";
+app.post('/login', (req, res) => {
+  const email = req.body.email
+  const password = req.body.password
+  const { user, error } = validateUser(email, password, users)
+  let errorMessage = ''
+  if (user) {
+    req.session["user_id"] = user.id
+    res.redirect('urls')
+  } else {
+    if (error === 'email') {
+      console.log('error: email')
+      errorMessage = '* email not found'
+    } else if (error === 'password') {
+      console.log('error: password')
+      errorMessage = '* password incorrect'
     }
     const templateVars = {
-      user: users[req.session["user_id"]], 
+      user: users[req.session["user_id"]],
       error: errorMessage
     }
-    res.render("urls_login", templateVars);
-  };
-});
+    res.render('urls_login', templateVars)
+  }
+})
 
 // logout user
-app.post("/logout", (req, res) => {
-  req.session = null;
-  res.redirect("/urls/login");
-});
-
-
+app.post('/logout', (req, res) => {
+  req.session = null
+  res.redirect('/urls/login')
+})
