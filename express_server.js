@@ -41,72 +41,72 @@ const users = {
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2']
-}));
-app.use(bodyParser.urlencoded({extended: true}));
+}))
+app.use(bodyParser.urlencoded({extended: true}))
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
-});
+  console.log(`Example app listening on port ${PORT}!`)
+})
 
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
+app.get('/', (req, res) => {
+  res.send('Hello!')
+})
 
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-});
+app.get('/urls.json', (req, res) => {
+  res.json(urlDatabase)
+})
 
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
+app.get('/hello', (req, res) => {
+  res.send('<html><body>Hello <b>World</b></body></html>\n')
+})
 
 // home page
-app.get("/home", (req, res) => {
+app.get('/home', (req, res) => {
   const templateVars = {
-    user: users[req.session["user_id"]]
+    user: users[req.session['user_id']]
   }
-  res.render("urls_home", templateVars);
-});
+  res.render('urls_home', templateVars)
+})
 
 // diplays URLs for logged in user
-app.get("/urls", (req, res) => {
-  const userSpecificUrls = urlsForUser(req.session["user_id"], urlDatabase);
-  const templateVars = { 
-    urls: userSpecificUrls, 
+app.get('/urls', (req, res) => {
+  const userSpecificUrls = urlsForUser(req.session["user_id"], urlDatabase)
+  const templateVars = {
+    urls: userSpecificUrls,
     user: users[req.session["user_id"]]
-  };
-  res.render("urls_index", templateVars);
-});
+  }
+  res.render('urls_index', templateVars)
+})
 
 // create a new URL
-app.get("/urls/new", (req, res) => {
+app.get('/urls/new', (req, res) => {
   const templateVars = {
-    user: users[req.session["user_id"]] 
+    user: users[req.session["user_id"]]
   }
-  res.render("urls_new", templateVars);
-});
+  res.render("urls_new", templateVars)
+})
 
 // user registration page
-app.get("/urls/register", (req, res) => {
+app.get('/urls/register', (req, res) => {
   const templateVars = {
     user: users[req.session["user_id"]],
     error: null
   }
-  res.render("urls_register", templateVars);
-});
+  res.render('urls_register', templateVars)
+})
 
-app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[`${req.params.shortURL}`].longURL;
-  res.redirect(longURL);
-});
+app.get('/u/:shortURL', (req, res) => {
+  const longURL = urlDatabase[`${req.params.shortURL}`].longURL
+  res.redirect(longURL)
+})
 
-app.get("/urls/shorturls", (req, res) => {
+app.get('/urls/shorturls', (req, res) => {
   const templateVars = {
     urls: urlDatabase,
-    user: users[req.session["user_id"]] 
+    user: users[req.session["user_id"]]
   }
-  res.render("urls_shorturls", templateVars);
-});
+  res.render('urls_shorturls', templateVars)
+})
 
 // user login page
 app.get("/urls/login", (req, res) => {
