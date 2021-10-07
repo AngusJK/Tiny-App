@@ -1,42 +1,42 @@
-const express = require("express");
-const app = express();
-const PORT = 8080;
-const bcrypt = require("bcrypt");
-const cookieSession = require("cookie-session");
-const bodyParser = require("body-parser");
-const { validateUser, urlsForUser, generateRandomString } = require("./helpers/userFunctions");
+const express = require('express')
+const app = express()
+const PORT = 8080
+const bcrypt = require('bcrypt')
+const cookieSession = require('cookie-session')
+const bodyParser = require('body-parser')
+const { validateUser, urlsForUser, generateRandomString } = require('./helpers/userFunctions')
 
-app.set("view engine", "ejs");
+app.set('view engine', 'ejs')
 
 const urlDatabase = {
-  "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "Rxj4l3" },
-  "sgq3y6": { longURL: "http://www.google.com", userID: "Rxj4l3" },
-  "d9Kled": { longURL: "http://www.github.com", userID: "lw2c49"},
-  "MRj39d": { longURL: "http://www.youtube.com", userID: "lw2c49"},
-  "8MbEj2": { longURL: "http://www.wikipedia.org", userID: "PpcDq7"},
-  "pppw4x": { longURL: "http://www.facebook.com", userID: "PpcDq7"},
-};
+  b2xVn2: { longURL: 'http://www.lighthouselabs.ca', userID: 'Rxj4l3' },
+  sgq3y6: { longURL: 'http://www.google.com', userID: 'Rxj4l3' },
+  d9Kled: { longURL: 'http://www.github.com', userID: 'lw2c49' },
+  MRj39d: { longURL: 'http://www.youtube.com', userID: 'lw2c49' },
+  eMbEj2: { longURL: 'http://www.wikipedia.org', userID: 'PpcDq7' },
+  pppw4x: { longURL: 'http://www.facebook.com', userID: 'PpcDq7' }
+}
 
-let users = {
-  "d9rjdl": {
-    id: "d9rjdl",
-    username: "Albert",
-    email: "albert@einstein.com",
-    password: "$2b$10$NdqA2jc.XBuxVtZzP2crcev4I4JeSZ7UUjPqlYBkm.4d131WN7iaW"
+const users = {
+  d9rjdl: {
+    id: 'd9rjdl',
+    username: 'Albert',
+    email: 'albert@einstein.com',
+    password: '$2b$10$NdqA2jc.XBuxVtZzP2crcev4I4JeSZ7UUjPqlYBkm.4d131WN7iaW'
   },
-  "Apkda2": {
-    id: "Apkda2",
-    username: "Marie",
-    email: "marie@curie.com",
-    password: "$2b$10$UxHU8ShE8.rC3JHehXTcte9uR0JyiumLSbA2ExeMvjRYwt986w5lG"
+  Apkda2: {
+    id: 'Apkda2',
+    username: 'Marie',
+    email: 'marie@curie.com',
+    password: '$2b$10$UxHU8ShE8.rC3JHehXTcte9uR0JyiumLSbA2ExeMvjRYwt986w5lG'
   },
-  "Tlqsaa": {
-    id: "Tlqsaa",
-    username: "Enrico",
-    email: "enrico@fermi.com",
-    password: "$2b$10$tIrseJky.Wgp5dj39/lEdOifoujOJe19mPqeBCX1nNU/eVpOlmocW"
+  Tlqsaa: {
+    id: 'Tlqsaa',
+    username: 'Enrico',
+    email: 'enrico@fermi.com',
+    password: '$2b$10$tIrseJky.Wgp5dj39/lEdOifoujOJe19mPqeBCX1nNU/eVpOlmocW'
   }
-};
+}
 
 app.use(cookieSession({
   name: 'session',
