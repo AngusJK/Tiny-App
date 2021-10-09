@@ -1,9 +1,8 @@
 const express = require('express')
 const app = express()
-const PORT = 8080
+const PORT = process.env.PORT || 3000
 const bcrypt = require('bcrypt')
 const cookieSession = require('cookie-session')
-// const bodyParser = require('body-parser')
 const { validateUser, urlsForUser, generateRandomString } = require('./helpers/userFunctions')
 
 app.set('view engine', 'ejs')
@@ -50,7 +49,7 @@ app.listen(PORT, () => {
 })
 
 app.get('/', (req, res) => {
-  res.send('Hello!')
+  res.send('Hello, World!')
 })
 
 app.get('/urls.json', (req, res) => {
