@@ -64,17 +64,17 @@ app.get('/hello', (req, res) => {
 // home page
 app.get('/home', (req, res) => {
   const templateVars = {
-    user: users[req.session['user_id']]
+    user: users[req.session.user_id]
   }
   res.render('urls_home', templateVars)
 })
 
 // diplays URLs for logged in user
 app.get('/urls', (req, res) => {
-  const userSpecificUrls = urlsForUser(req.session["user_id"], urlDatabase)
+  const userSpecificUrls = urlsForUser(req.session.user_id, urlDatabase)
   const templateVars = {
     urls: userSpecificUrls,
-    user: users[req.session["user_id"]]
+    user: users[req.session.user_id]
   }
   res.render('urls_index', templateVars)
 })
@@ -82,7 +82,7 @@ app.get('/urls', (req, res) => {
 // create a new URL
 app.get('/urls/new', (req, res) => {
   const templateVars = {
-    user: users[req.session["user_id"]]
+    user: users[req.session.user_id]
   }
   res.render('urls_new', templateVars)
 })
@@ -90,7 +90,7 @@ app.get('/urls/new', (req, res) => {
 // user registration page
 app.get('/urls/register', (req, res) => {
   const templateVars = {
-    user: users[req.session["user_id"]],
+    user: users[req.session.user_id],
     error: null
   }
   res.render('urls_register', templateVars)
@@ -104,7 +104,7 @@ app.get('/u/:shortURL', (req, res) => {
 app.get('/urls/shorturls', (req, res) => {
   const templateVars = {
     urls: urlDatabase,
-    user: users[req.session["user_id"]]
+    user: users[req.session.user_id]
   }
   res.render('urls_shorturls', templateVars)
 })
@@ -113,14 +113,14 @@ app.get('/urls/shorturls', (req, res) => {
 app.get('/urls/login', (req, res) => {
   const templateVars = {
     error: null,
-    user: users[req.session["user_id"]]
+    user: users[req.session.user_id]
   }
   res.render('urls_login', templateVars)
 })
 
 app.post('/urls', (req, res) => {
   const newShortURL = generateRandomString()
-  urlDatabase[`${newShortURL}`] = { longURL: req.body.longURL, userID: req.session["user_id"] }
+  urlDatabase[`${newShortURL}`] = { longURL: req.body.longURL, userID: req.session.user_id }
   res.redirect('/urls')
 })
 
@@ -129,7 +129,7 @@ app.post('/urls/:shortURL', (req, res) => {
   const templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[`${req.params.shortURL}`].longURL,
-    user: users[req.session["user_id"]]
+    user: users[req.session.user_id]
   }
   res.render('urls_show', templateVars)
 })
@@ -155,7 +155,7 @@ app.post('/register', (req, res) => {
   if (username === '' || email === '' || password === '') {
     const errorMessage = '* fields cannot be left blank'
     const templateVars = {
-      user: users[req.session["user_id"]],
+      user: users[req.session.user_id],
       error: errorMessage
     }
     res.render('urls_register', templateVars)
@@ -164,15 +164,15 @@ app.post('/register', (req, res) => {
   if (user || error === 'password') {
     const errorMessage = '* user already exists'
     const templateVars = {
-      user: users[req.session["user_id"]],
+      user: users[req.session.user_id],
       error: errorMessage
     }
     res.render('urls_register', templateVars)
   } else {
     const newId = generateRandomString()
-    const newUser = { "id": newId, "username": username, "email": email, "password": hashedPassword }
+    const newUser = { id: newId, username: username, email: email, password: hashedPassword }
     users[newUser.id] = newUser
-    req.session["user_id"] = newId
+    req.session.user_id = newId
     res.redirect('urls')
   }
 })
@@ -184,7 +184,7 @@ app.post('/login', (req, res) => {
   const { user, error } = validateUser(email, password, users)
   let errorMessage = ''
   if (user) {
-    req.session["user_id"] = user.id
+    req.session.user_id = user.id
     res.redirect('urls')
   } else {
     if (error === 'email') {
@@ -195,7 +195,7 @@ app.post('/login', (req, res) => {
       errorMessage = '* password incorrect'
     }
     const templateVars = {
-      user: users[req.session["user_id"]],
+      user: users[req.session.user_id],
       error: errorMessage
     }
     res.render('urls_login', templateVars)
