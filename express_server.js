@@ -48,9 +48,9 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`)
 })
 
-app.get('/', (req, res) => {
-  res.send('Hello, World!')
-})
+// app.get('/', (req, res) => {
+//   res.send('Hello, World!')
+// })
 
 app.get('/urls.json', (req, res) => {
   res.json(urlDatabase)
@@ -61,7 +61,7 @@ app.get('/hello', (req, res) => {
 })
 
 // home page
-app.get('/home', (req, res) => {
+app.get('/', (req, res) => {
   const templateVars = {
     user: users[req.session.user_id]
   }
