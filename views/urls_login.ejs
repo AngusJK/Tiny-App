@@ -7,15 +7,15 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <title>New Login - TinyApp Example</title>
   </head>
-  <body style="background-color: black;">
+  <body style="background-color: #42714A;">
     <%- include('partials/_header') %>
-    <div style="background-color: ivory; padding: 20px; margin: 30px; border-radius: 5px;">
+    <div style="background-color: #D7F9DB; padding: 20px; margin: 30px; border-radius: 5px;">
       
-        <h3 style="margin: 10px">Sign into your account</h3>
+        <h3 style="margin: 10px; color: #364573">Sign into your account</h3>
         <form method="POST" action="/login">
           <input style="margin: 10px; width: 300px;" type="email" name="email" placeholder="enter your email"><br>
           <input style="margin: 10px; width: 300px;" type="password" name="password" placeholder="enter your password"><br>
-          <input style="margin: 10px" type="submit" value="Sign In" class="btn btn-primary">
+          <input style="margin: 10px" type="submit" value="Sign In" class="btn btn-secondary">
         </form>  
         <p style="color: red;"><%= error %></p>
       
