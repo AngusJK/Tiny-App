@@ -7,11 +7,11 @@
   <link href="#">
   <title>Tiny App</title>
 </head>
-<body style="background-color: black;">
+<body style="background-color: #42714A;">
   <%- include('partials/_header') %>
-  <div style="background-color: ivory; padding: 20px; margin: 30px; border-radius: 5px;">
+  <div style="background-color: #D7F9DB; padding: 20px; margin: 30px; border-radius: 5px; box-shadow: 8px 8px 15px rgb(29, 28, 28);">
   <main style="margin: 1em;">
-    <h3>My URLs</h3>
+    <h3 style="color: #364573">My URLs</h3>
     <table class="table">
       <thead>
         <tr>
@@ -28,7 +28,7 @@
               <td><%= urls[url].longURL %></td>
               <td>
                 <form method="POST" action="/urls/<%= url %>">
-                  <input type="submit" value="Edit" class="btn btn-primary">
+                  <input type="submit" value="Edit" class="btn btn-secondary">
                 </form>
               </td>
               <td>
