@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <title>New Login - TinyApp Example</title>
   </head>
-  <body>
+  <body style="background-color: black;">
     <%- include('partials/_header') %>
-    <div>
-      <div id="card" style="border: 1px solid black; width: 350px;">
+    <div style="background-color: ivory; padding: 20px; margin: 30px; border-radius: 5px;">
+      
         <h3 style="margin: 10px">Sign into your account</h3>
         <form method="POST" action="/login">
           <input style="margin: 10px; width: 300px;" type="email" name="email" placeholder="enter your email"><br>
@@ -18,7 +18,7 @@
           <input style="margin: 10px" type="submit" value="Sign In" class="btn btn-primary">
         </form>  
         <p style="color: red;"><%= error %></p>
-      </div>
+      
     </div>
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
